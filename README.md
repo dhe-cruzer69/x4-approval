@@ -2,7 +2,7 @@
 
 **Human-in-the-loop control** for high-impact agent actions.
 
-Risk determines autonomy:
+## Risk → Autonomy Matrix
 
 | Risk | Agent behavior |
 |---|---|
@@ -19,7 +19,7 @@ Risk determines autonomy:
 - Short-lived approval tokens (never inferred from model text)
 - Policy engine integration
 - Audit trail of every decision
-- Escalation to human when status is UNKNOWN
+- Escalation to human when status is `UNKNOWN`
 
 ## Safety
 
