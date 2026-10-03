@@ -1,31 +1,39 @@
-# X4 Approval
+# x4-approval
 
-**Human-in-the-loop control** for high-impact agent actions.
+**Human-in-the-loop approval gates** and risk-based autonomy controls for high-impact agent actions.
 
-## Risk → Autonomy Matrix
+Implements **Level 3 “Never autonomous”** enforcement for the X4 / ARIEXCORE fleet.
 
-| Risk | Agent behavior |
-|---|---|
-| Read-only | Automatic |
-| Low-impact reversible | Automatic |
-| External communication | Approval depending on context |
-| Financial transaction | Human approval |
-| Production mutation | Human approval |
-| Destructive operation | Explicit approval |
-| Uncertain result | Stop + review |
+## When approval is required
 
-## Features
+| Action | Reason |
+|--------|--------|
+| `delete_repository` | Irreversible data loss |
+| `modify_secrets` | Credential exposure |
+| `force_push_main` | History rewrite |
+| `change_visibility` | Public/private flip |
+| `merge_without_review` | Bypass review |
+| `financial_transaction` | Money movement |
+| `policy_bypass` | Circumvent gates |
+| `unknown_high_impact` | Evidence state UNKNOWN |
 
-- Short-lived approval tokens (never inferred from model text)
-- Policy engine integration
-- Audit trail of every decision
-- Escalation to human when status is `UNKNOWN`
+## API (minimal)
 
-## Safety
+```python
+from x4_approval import requires_approval
 
-Models cannot grant themselves permission.  
-Approval is an external signal, not a model claim.
+if requires_approval("delete_repository"):
+    # escalate to human — do not execute
+    ...
+```
 
-Part of the X4 7-capability architecture.
+## Policy
+See `src/x4_approval/policy.yml`.
 
+## Related
+- [ariexcore-control-plane](https://github.com/dhe-cruzer69/ariexcore-control-plane)
+- [x4-fleet](https://github.com/dhe-cruzer69/x4-fleet)
+- [x4-beast](https://github.com/dhe-cruzer69/x4-beast)
+
+## License
 Apache-2.0

@@ -1,0 +1,21 @@
+# x4-approval — Level 3 gate policy
+version: 1
+gate: required
+triggers:
+  - delete_repository
+  - modify_secrets
+  - force_push_main
+  - change_visibility
+  - merge_without_review
+  - financial_transaction
+  - policy_bypass
+  - unknown_high_impact
+escalation:
+  channel: human
+  timeout_hours: 72
+  on_timeout: deny
+states:
+  - pending
+  - approved
+  - denied
+  - expired
