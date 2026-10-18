@@ -27,6 +27,22 @@ if requires_approval("delete_repository"):
     ...
 ```
 
+<!-- X4-APEX-DIAGRAM-START:x4-approval -->
+
+```mermaid
+flowchart TD
+    ACTION[Requested Action] --> POLICY[Policy YAML and Risk Classification]
+    POLICY -->|not protected| CONTINUE[Caller Continues Under Existing Policy]
+    POLICY -->|protected action| REQUIRED[requires_approval = true]
+    REQUIRED --> HUMAN[Human Review Outside the Gate]
+    HUMAN -->|approved by caller workflow| EXEC[Authorized Action Path]
+    HUMAN -->|denied or no approval| STOP[Do Not Execute]
+    DENYLIST[Delete, Secrets, Force Push, Visibility, Finance] -. always escalate .-> REQUIRED
+    STOP --> AUDIT[Record Decision in Caller Evidence]
+```
+
+<!-- X4-APEX-DIAGRAM-END:x4-approval -->
+
 ## Policy
 See `src/x4_approval/policy.yml`.
 
