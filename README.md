@@ -58,5 +58,24 @@ Apache-2.0
 
 > Status: architecture documentation; implementation and deployment claims require independent verification.
 
+```mermaid
+stateDiagram-v2
+  [*] --> Requested
+  Requested --> Validating: parse request
+  Validating --> Denied: invalid scope or malformed request
+  Validating --> PolicyCheck: request is well formed
+  PolicyCheck --> Denied: policy prohibits action
+  PolicyCheck --> AwaitingApproval: human approval required
+  PolicyCheck --> Approved: policy permits without escalation
+  AwaitingApproval --> Denied: rejected
+  AwaitingApproval --> Expired: TTL elapsed
+  AwaitingApproval --> Approved: identity + scope + nonce verified
+  Approved --> Consumed: action gate accepts single-use token
+  Approved --> Expired: token expires before use
+  Consumed --> [*]: audit receipt recorded
+  Denied --> [*]
+  Expired --> [*]
+```
+
 **Evidence note:** Identity binding, expiry, nonce consumption, and replay resistance require tests; the state machine documents intended controls, not proof they exist.
 
